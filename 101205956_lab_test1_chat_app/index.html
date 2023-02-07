@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>lab test 1</title>
+</head>
+
+<body>
+    Username<br>
+    <input id="Username" type="text" name="Username" value="" placeholder="Username">
+    <br />
+    Room<br>
+    <input id="room" type="text" name="room" value="" placeholder="room"><br>
+    <button type="button" name="button" onclick="joinRoom()" onclick="setUsername()">
+        Join Room
+    </button>
+
+    <br />
+    <input id="message" type="text" name="message" value="" placeholder="message"><br>
+    <button type="button" name="button" onclick="sendMessage()">
+        Send Message
+    </button>
+
+    <div id="message-container"></div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const client = io()
+
+    client.on('message', (message) => {
+        document.getElementById('message-container').innerHTML += '<div>' + message + '</div>'
+    })
+
+    function setUsername() {
+        client.emit('newUser', document.getElementById('Username').value)
+    }
+
+    function joinRoom() {
+        client.emit('joinroom', document.getElementById('room').value)
+    }
+
+    function sendMessage() {
+        client.emit('message',
+            {
+                room: document.getElementById('room').value,
+                message: document.getElementById('message').value
+            })
+    }
+</script>
+
+</html>
